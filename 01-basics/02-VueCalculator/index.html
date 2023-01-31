@@ -42,9 +42,8 @@
               type="radio"
               name="operator"
               :value="operator.value"
-              v-model="activeOperator"
-              :checked="operator.value === activeOperator"/>
-            {{operator.symbol}}
+              v-model="activeOperator"/>
+            {{ operator.symbol }}
           </label>
         </div>
 
@@ -56,7 +55,7 @@
 
         <div class="col">=</div>
 
-        <output class="col">{{result}}</output>
+        <output class="col">{{ result }}</output>
       </div>
     </div>
 
