@@ -13,9 +13,7 @@ export default defineComponent({
 
   methods: {
     emitValue() {
-      let count = this.count;
-      count++;
-      this.$emit('update:count', count);
+      this.$emit('update:count', this.count + 1);
     }
   },
 
