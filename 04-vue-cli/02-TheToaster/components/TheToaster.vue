@@ -1,24 +1,57 @@
 <template>
-  <div class="toasts">
-    <div class="toast toast_success">
-      <ui-icon class="toast__icon" icon="check-circle" />
-      <span>Success Toast Example</span>
-    </div>
-
-    <div class="toast toast_error">
-      <ui-icon class="toast__icon" icon="alert-circle" />
-      <span>Error Toast Example</span>
-    </div>
+  <div class="toasts" v-if="toasts.length">
+    <ui-toast
+      v-for="toast in toasts"
+      :key="toast.id"
+      :id="toast.id"
+      :class="`toast_${toast.type}`"
+      @deleteToast="deleteToast">
+      <ui-icon class="toast__icon" :icon="toast.icon" />
+      <span>{{ toast.message }}</span>
+    </ui-toast>
   </div>
 </template>
 
 <script>
 import UiIcon from './UiIcon.vue';
+import UiToast from './UiToast.vue';
 
 export default {
   name: 'TheToaster',
 
-  components: { UiIcon },
+  components: { UiIcon, UiToast },
+
+  data() {
+    return {
+      toasts: []
+    }
+  },
+
+  methods: {
+    success(message) {
+      this.addToast(message)
+    },
+
+    error(message) {
+      this.addToast(message, 'error', 'alert-circle')
+    },
+
+    addToast(message, type = 'success', icon = 'check-circle'){
+      const newToast = {
+        message: message,
+        type: type,
+        icon: icon,
+        id: Date.now()
+      };
+
+      this.toasts.push(newToast);
+    },
+
+    deleteToast(id) {
+      const deletedToastIndex = this.toasts.findIndex(toast => toast.id === id);
+      this.toasts.splice(deletedToastIndex, 1);
+    }
+  }
 };
 </script>
 
@@ -41,33 +74,7 @@ export default {
   }
 }
 
-.toast {
-  display: flex;
-  flex: 0 0 auto;
-  flex-direction: row;
-  align-items: center;
-  padding: 16px;
-  background: #ffffff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  border-radius: 4px;
-  font-size: 18px;
-  line-height: 28px;
-  width: auto;
-}
-
-.toast + .toast {
-  margin-top: 20px;
-}
-
 .toast__icon {
   margin-right: 12px;
-}
-
-.toast.toast_success {
-  color: var(--green);
-}
-
-.toast.toast_error {
-  color: var(--red);
 }
 </style>
