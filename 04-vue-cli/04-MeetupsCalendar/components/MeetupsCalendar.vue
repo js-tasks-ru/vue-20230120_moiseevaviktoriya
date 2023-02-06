@@ -41,7 +41,7 @@ export default {
 
   data() {
     return {
-      currentDate: new Date('2020-05-31'),
+      currentDate: new Date(),
     }
   },
 
