@@ -1,5 +1,5 @@
 <template>
-  <div class="toast">
+  <div class="toast" :class="`toast_${type}`">
     <slot/>
     <button class="toast__close" @click="closeToast">X</button>
   </div>
@@ -15,6 +15,11 @@
         default: 5000
       },
 
+      type: {
+        type: String,
+        default: 'success'
+      },
+
       id: {
         type: Number,
         default: 0
@@ -23,7 +28,7 @@
 
     methods: {
       closeToast() {
-        this.$emit('deleteToast', this.id);
+        this.$emit('deleteToast');
       }
     },
 

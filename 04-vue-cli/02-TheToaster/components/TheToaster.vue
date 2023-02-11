@@ -4,8 +4,8 @@
       v-for="toast in toasts"
       :key="toast.id"
       :id="toast.id"
-      :class="`toast_${toast.type}`"
-      @deleteToast="deleteToast">
+      :type="toast.type"
+      @deleteToast="deleteToast(toast.id)">
       <ui-icon class="toast__icon" :icon="toast.icon" />
       <span>{{ toast.message }}</span>
     </ui-toast>
@@ -23,7 +23,8 @@ export default {
 
   data() {
     return {
-      toasts: []
+      toasts: [],
+      lastId: 0
     }
   },
 
@@ -41,7 +42,7 @@ export default {
         message: message,
         type: type,
         icon: icon,
-        id: Date.now()
+        id: this.lastId++
       };
 
       this.toasts.push(newToast);

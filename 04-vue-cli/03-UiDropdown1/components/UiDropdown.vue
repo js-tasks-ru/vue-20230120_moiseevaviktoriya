@@ -20,7 +20,7 @@
 
       <select
         :value="modelValue"
-        style="visibility: hidden"
+        v-show="false"
         @change="selectOption($event.target.value)">
         <option
           v-for="option in options"

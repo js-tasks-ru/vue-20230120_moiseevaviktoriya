@@ -1,10 +1,10 @@
 <template>
   <div class="calendar-view__cell" tabindex="0">
-    <div class="calendar-view__cell-day">{{ date.getDate() }}</div>
+    <div class="calendar-view__cell-day">{{ calendarItem.date.getDate() }}</div>
     <div class="calendar-view__cell-content">
-      <template v-if="meetups.length">
+      <template v-if="calendarItem.meetups.length">
         <a
-          v-for="meetup in meetups"
+          v-for="meetup in calendarItem.meetups"
           :href="`/meetups/${meetup.id}`"
           class="calendar-event">
           {{ meetup.title }}
@@ -19,15 +19,10 @@
     name: 'MeetupsCalendarCell',
 
     props: {
-      date: {
-        type: Date,
+      calendarItem: {
+        type: Object,
         required: true,
-        default: new Date()
-      },
-
-      meetups: {
-        type: Array,
-        default: () => []
+        default: () => {}
       }
     },
   };

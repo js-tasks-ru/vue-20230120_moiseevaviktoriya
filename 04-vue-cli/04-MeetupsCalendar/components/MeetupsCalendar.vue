@@ -7,7 +7,7 @@
           type="button"
           aria-label="Previous month"
           @click="setCurrentMonth(-1)"></button>
-        <div class="calendar-view__date">{{ getCurrentMonthYear }}</div>
+        <div class="calendar-view__date">{{ currentMonthYear }}</div>
         <button
           class="calendar-view__control-right"
           type="button"
@@ -18,18 +18,17 @@
 
     <div class="calendar-view__grid">
       <meetups-calendar-cell
-        v-for="date in dates"
-        :date="date"
-        :meetups="getMeetupsByDate(date)"
-        :class="{'calendar-view__cell_inactive' : !isActive(date)}"/>
+        v-for="calendarItem in calendarItems"
+        :calendarItem="calendarItem"
+        :class="{'calendar-view__cell_inactive' : !isActive(calendarItem.date)}"/>
     </div>
   </div>
 </template>
 
 <script>
-import MeetupsCalendarCell from './MeetupsCalendarCell';
+  import MeetupsCalendarCell from './MeetupsCalendarCell';
 
-export default {
+  export default {
   name: 'MeetupsCalendar',
   components: { MeetupsCalendarCell },
   props: {
@@ -46,14 +45,14 @@ export default {
   },
 
   computed: {
-    getCurrentMonthYear() {
+    currentMonthYear() {
       return this.currentDate.toLocaleDateString(navigator.language, {
         month: 'long',
         year: 'numeric',
       });
     },
 
-    dates() {
+    calendarItems() {
       const year = this.currentDate.getFullYear();
       const month = this.currentDate.getMonth();
       const firstDay = new Date(year, month, 1);
@@ -61,28 +60,30 @@ export default {
       const lastDay = new Date(year, month + 1, 0);
       const monthLength = lastDay.getDate();
       const lastDayWeekday = lastDay.getDay() === 0 ? 7 : lastDay.getDay();
-      const days = [];
+      const items = [];
 
       for (let i = 1; i <= monthLength; i++) {
-        days.push(new Date(year, month, i));
+        const newDate = new Date(year, month, i);
+
+        items.push({ date: newDate, meetups: this.getMeetupsByDate(newDate) });
       }
 
       for (let i = 1; i < firstDayWeekday; i++) {
         const prevDate = new Date(year, month, 1);
         prevDate.setDate(prevDate.getDate() - i);
-        days.unshift(prevDate);
+        items.unshift({ date: prevDate, meetups: this.getMeetupsByDate(prevDate) });
       }
 
       for (let i = 0; i < 7 - lastDayWeekday; i++) {
         const nextDate = new Date(year, month + 1, 0);
         nextDate.setDate(nextDate.getDate() + i + 1);
-        days.push(nextDate);
+        items.push({ date: nextDate, meetups: this.getMeetupsByDate(nextDate) });
       }
 
-      return days;
+      return items;
     }
-
   },
+
   methods: {
     setCurrentMonth(direction) {
       const date = this.currentDate.getDate();
