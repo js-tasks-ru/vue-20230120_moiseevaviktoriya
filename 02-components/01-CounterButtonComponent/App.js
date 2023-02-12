@@ -19,7 +19,7 @@ export default defineComponent({
       <p>count = {{ count }}</p>
       <p v-for="i in 3">
         <CounterButton 
-        v-model.count="count" />
+        v-model:count="count" />
       </p>
     </div>
   `,

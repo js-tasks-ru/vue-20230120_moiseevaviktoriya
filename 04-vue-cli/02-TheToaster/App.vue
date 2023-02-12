@@ -1,5 +1,7 @@
 <template>
-  <the-toaster ref="toaster" />
+  <the-toaster
+    ref="toaster"
+    :timeOut="5000"/>
   <p>
     <button type="button" @click="handleSuccessClick">Add Success Message</button>
     <button type="button" @click="handleErrorClick">Add Error Message</button>
