@@ -1,32 +1,56 @@
 <template>
   <fieldset class="agenda-item-form">
-    <button type="button" class="agenda-item-form__remove-button">
+    <button
+      type="button"
+      class="agenda-item-form__remove-button"
+      @click="$emit('remove')"
+    >
       <UiIcon icon="trash" />
     </button>
 
     <UiFormGroup>
-      <UiDropdown title="Тип" :options="$options.agendaItemTypeOptions" name="type" />
+      <UiDropdown
+        title="Тип"
+        :options="$options.agendaItemTypeOptions"
+        name="type"
+        v-model="localAgendaItem.type"
+      />
     </UiFormGroup>
 
     <div class="agenda-item-form__row">
       <div class="agenda-item-form__col">
         <UiFormGroup label="Начало">
-          <UiInput type="time" placeholder="00:00" name="startsAt" />
+          <UiInput
+            v-model="localAgendaItem.startsAt"
+            type="time"
+            placeholder="00:00"
+            name="startsAt"
+          />
         </UiFormGroup>
       </div>
       <div class="agenda-item-form__col">
         <UiFormGroup label="Окончание">
-          <UiInput type="time" placeholder="00:00" name="endsAt" />
+          <UiInput
+            v-model="localAgendaItem.endsAt"
+            type="time"
+            placeholder="00:00"
+            name="endsAt"
+          />
         </UiFormGroup>
       </div>
     </div>
 
-    <UiFormGroup label="Заголовок">
-      <UiInput name="title" />
+    <UiFormGroup
+        v-for="(item, key) in $options.agendaItemFormSchemas[localAgendaItem.type]"
+        :label="item.label">
+      <component
+        :is="item.component"
+        :name="key"
+        v-bind="item.props"
+        v-model="localAgendaItem[key]"
+      />
     </UiFormGroup>
-    <UiFormGroup label="Описание">
-      <UiInput multiline name="description" />
-    </UiFormGroup>
+
   </fieldset>
 </template>
 
@@ -163,9 +187,45 @@ export default {
     agendaItem: {
       type: Object,
       required: true,
-    },
+    }
   },
-};
+
+  emits: ['remove', 'update:agendaItem'],
+
+  data() {
+    return {
+      localAgendaItem: { ...this.agendaItem }
+    }
+  },
+
+  watch: {
+    localAgendaItem: {
+      deep: true,
+      handler() {
+        this.$emit('update:agendaItem', { ...this.localAgendaItem });
+      },
+    },
+
+    'localAgendaItem.startsAt': {
+      handler(newVal, oldVal) {
+        const endsAt = new Date('1970-01-01T' + this.localAgendaItem.endsAt);
+        const oldTime = new Date('1970-01-01T' + oldVal);
+        const newTime = new Date('1970-01-01T' + newVal);
+
+        let difference = endsAt - oldTime;
+        const hours = Math.floor(difference / 1000 / 60 / 60);
+        difference -= hours * 1000 * 60 * 60;
+        const minutes = Math.floor(difference / 1000 / 60);
+        difference -= minutes * 1000 * 60;
+
+        endsAt.setHours(newTime.getHours() + hours);
+        endsAt.setMinutes(newTime.getMinutes() + minutes);
+
+        this.localAgendaItem.endsAt = endsAt.toLocaleTimeString('ru-RU', { hour: "2-digit", minute: "2-digit" });
+      },
+    }
+  }
+}
 </script>
 
 <style scoped>
