@@ -1,5 +1,5 @@
 <template>
-  <form class="meetup-form" @submit.prevent="$emit('submit', JSON.parse(JSON.stringify(this.localMeetup)))">
+  <form class="meetup-form" @submit.prevent="handleSubmit">
     <div class="meetup-form__content">
       <fieldset class="meetup-form__section">
         <UiFormGroup label="Название">
@@ -80,6 +80,7 @@ import UiImageUploader from '../../../06-wrappers/05-UiImageUploader/components/
 import UiInput from './UiInput.vue';
 import UiInputDate from '../../../06-wrappers/06-UiInputDate/components/UiInputDate';
 import { createAgendaItem } from '../meetupService.js';
+import { klona } from 'klona';
 
 export default {
   name: 'MeetupForm',
@@ -109,7 +110,7 @@ export default {
 
   data() {
     return {
-      localMeetup: JSON.parse(JSON.stringify(this.meetup))
+      localMeetup: klona(this.meetup)
     }
   },
 
@@ -130,8 +131,8 @@ export default {
     },
 
     handleSubmit() {
-      this.$emit('submit', this.localMeetup);
-    }
+      this.$emit('submit', klona(this.localMeetup));
+    },
   },
 };
 </script>
