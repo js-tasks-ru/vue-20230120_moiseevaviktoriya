@@ -1,4 +1,4 @@
-import { computed } from 'vue';
+import { computed, toRef } from 'vue';
 
 /**
  * @template T
@@ -7,5 +7,11 @@ import { computed } from 'vue';
  */
 export function reactify(func) {
   // ...
-  // return () => computed(() => {});
+  return (...args) => computed(() => {
+    const values = args.map(arg => {
+      return typeof arg === 'object' ?  arg.value : arg;
+    });
+
+    return func(...values)
+  });
 }
