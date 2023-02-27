@@ -1,15 +1,19 @@
 <script>
-import { isVNode } from 'vue';
+  import { isVNode } from 'vue';
 
-export default {
-  name: 'VNode',
+  export default {
+    name: 'VNode',
 
-  props: {
-    vnode: {
-      type: [Object, Array],
-      require: true,
-      validator: (value) => (Array.isArray(value) ? value.every((item) => isVNode(item)) : isVNode(value)),
+    props: {
+      vnode: {
+        type: [Object, Array],
+        require: true,
+        validator: (value) => (Array.isArray(value) ? value.every((item) => isVNode(item)) : isVNode(value)),
+      },
     },
-  },
-};
+
+    render() {
+      return this.vnode
+    }
+  };
 </script>
