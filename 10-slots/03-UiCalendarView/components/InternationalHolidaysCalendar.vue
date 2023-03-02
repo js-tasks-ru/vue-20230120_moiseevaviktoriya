@@ -1,11 +1,11 @@
 <template>
   <UiCalendarView v-slot="{ item }">
     <div
-      v-for="holidayItem in getHolidaysByDate(item.date)"
-      :key="holidayItem.holiday"
+      v-for="holidayItem in internationalHolidaysMap[item.date.getMonth()][item.date.getDate()]"
+      :key="holidayItem"
       class="holiday"
     >
-      {{ holidayItem.holiday }}
+      {{ holidayItem }}
     </div>
   </UiCalendarView>
 </template>
@@ -80,15 +80,6 @@ export default {
       }
       return result;
     },
-  },
-
-  methods: {
-    getHolidaysByDate(date) {
-      return this.internationalHolidays.filter(holiday => {
-        return holiday.month - 1 === date.getMonth()
-          && holiday.date === date.getDate();
-      });
-    }
   }
 };
 </script>

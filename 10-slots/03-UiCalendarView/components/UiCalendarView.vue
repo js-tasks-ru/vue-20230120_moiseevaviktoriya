@@ -62,21 +62,21 @@
         const items = [];
 
         for (let i = 1; i <= monthLength; i++) {
-          const newDate = new Date(year, month, i);
+          const newDate = new Date(Date.UTC(year, month, i));
 
-          items.push({ date: newDate });
+          items.push({ date: newDate, timestamp: +newDate});
         }
 
         for (let i = 1; i < firstDayWeekday; i++) {
-          const prevDate = new Date(year, month, 1);
+          const prevDate = new Date(Date.UTC(year, month, 1));
           prevDate.setDate(prevDate.getDate() - i);
-          items.unshift({ date: prevDate });
+          items.unshift({ date: prevDate, timestamp: +prevDate });
         }
 
         for (let i = 0; i < 7 - lastDayWeekday; i++) {
-          const nextDate = new Date(year, month + 1, 0);
+          const nextDate = new Date(Date.UTC(year, month + 1, 0));
           nextDate.setDate(nextDate.getDate() + i + 1);
-          items.push({ date: nextDate });
+          items.push({ date: nextDate, timestamp: +nextDate });
         }
 
         return items;

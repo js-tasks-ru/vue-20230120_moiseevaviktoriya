@@ -1,11 +1,10 @@
 <template>
   <div class="pagination-container">
-    <template
+    <slot
       v-for="item in chunks[page - 1]"
       :key="item.id"
-    >
-      <slot :item="item"/>
-    </template>
+      :item="item"
+    />
   </div>
 </template>
 

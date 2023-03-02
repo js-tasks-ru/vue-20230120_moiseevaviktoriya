@@ -1,7 +1,7 @@
 <template>
   <UiCalendarView v-slot="{ item }">
     <UiCalendarEvent
-      v-for="meetup in getMeetupsByDate(item.date)"
+      v-for="meetup in meetupsMap[item.timestamp]"
       tag="a"
       :href="`/meetups/${meetup.id}`">
         {{ meetup.title }}
@@ -10,10 +10,10 @@
 </template>
 
 <script>
-import UiCalendarView from './UiCalendarView.vue';
-import UiCalendarEvent from './UiCalendarEvent.vue';
+  import UiCalendarView from './UiCalendarView.vue';
+  import UiCalendarEvent from './UiCalendarEvent.vue';
 
-export default {
+  export default {
   name: 'MeetupsCalendar',
 
   components: {
@@ -28,15 +28,19 @@ export default {
     },
   },
 
-  methods: {
-    getMeetupsByDate(date) {
-      return this.meetups.filter(meetup => {
-        const meetupDate = new Date(meetup.date);
-        return meetupDate.getMonth() === date.getMonth()
-          && meetupDate.getFullYear() === date.getFullYear()
-          && meetupDate.getDate() === date.getDate();
-      });
-    }
+  computed: {
+    meetupsMap() {
+      const result = {};
+
+      for (let i = 0; i < this.meetups.length; i++) {
+        if (!result[this.meetups[i].date]) {
+          result[this.meetups[i].date] = [];
+        }
+        result[this.meetups[i].date].push(this.meetups[i]);
+      }
+
+     return result;
+    },
   }
 };
 </script>
