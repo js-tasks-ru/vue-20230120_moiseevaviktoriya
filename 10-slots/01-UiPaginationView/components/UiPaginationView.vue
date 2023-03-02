@@ -1,6 +1,10 @@
 <template>
   <div class="pagination-container">
-    <!-- Контент страницы -->
+    <slot
+      v-for="item in chunks[page - 1]"
+      :key="item.id"
+      :item="item"
+    />
   </div>
 </template>
 
@@ -26,6 +30,16 @@ export default {
       required: true,
     },
   },
+
+  computed: {
+    chunks() {
+      const chunks = [];
+      for (let i = 0; i < this.items.length; i += this.perPage) {
+        chunks.push(this.items.slice(i, i + this.perPage));
+      }
+      return chunks;
+    }
+  }
 };
 </script>
 
