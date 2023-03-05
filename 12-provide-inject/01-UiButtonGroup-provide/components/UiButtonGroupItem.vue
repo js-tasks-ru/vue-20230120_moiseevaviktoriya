@@ -1,8 +1,17 @@
 <template>
-  <button class="button-group__button button-group__button_active" type="button" aria-selected="false">Button</button>
+  <button
+    class="button-group__button"
+    :class="{'button-group__button_active' : isActiveClass}"
+    type="button"
+    aria-selected="false"
+    @click='update'
+  >
+    <slot />
+  </button>
 </template>
 
 <script>
+
 export default {
   name: 'UiButtonGroupItem',
 
@@ -11,6 +20,23 @@ export default {
       required: true,
     },
   },
+
+  inject: {
+    injectedValue: 'value',
+    updateInjectedValue: 'update'
+  },
+
+  computed: {
+    isActiveClass() {
+      return this.injectedValue === this.value
+    }
+  },
+
+  methods: {
+    update() {
+      this.updateInjectedValue(this.value)
+    }
+  }
 };
 </script>
 
